@@ -1,3 +1,12 @@
+local fmt = string.format
+local paq_dir = fmt('%s/site/pack/paqs/start/paq-nvim', vim.fn.stdpath('data'))
+
+if vim.fn.empty(vim.fn.glob(paq_dir)) > 0 then
+  vim.api.nvim_echo({{'Paq package manager is being installed'}}, false, {})
+  vim.fn.system {'git', 'clone', '--depth=1', 'https://github.com/savq/paq-nvim.git', paq_dir}
+  return
+end
+
 require "paq" {
 	"savq/paq-nvim";
 	"franbach/miramare";
