@@ -1,12 +1,3 @@
-local fmt = string.format
-local paq_dir = fmt('%s/site/pack/paqs/start/paq-nvim', vim.fn.stdpath('data'))
-
-if vim.fn.empty(vim.fn.glob(paq_dir)) > 0 then
-  vim.api.nvim_echo({{'Paq package manager is being installed'}}, false, {})
-  vim.fn.system {'git', 'clone', '--depth=1', 'https://github.com/savq/paq-nvim.git', paq_dir}
-  return
-end
-
 require "paq" {
 	"savq/paq-nvim";
 	"franbach/miramare";
@@ -36,9 +27,11 @@ require "paq" {
   "folke/todo-comments.nvim";
   "windwp/nvim-autopairs";
   "tpope/vim-surround";
-  -- "jose-elias-alvarez/null-ls.nvim";
   "tpope/vim-commentary";
   "wakatime/vim-wakatime";
+  "APZelos/blamer.nvim";
+  "folke/trouble.nvim";
+  "junegunn/vim-easy-align"
 }
 
 -- local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
@@ -62,10 +55,14 @@ require "paq" {
 --     -- end,
 -- })
 
+require("trouble").setup {}
+
 require'lspconfig'.gopls.setup{}
 
+require'lspconfig'.emmet_ls.setup{}
+
 require'lspconfig'.elixirls.setup{
-    cmd = { "/home/lucas/lsp/elixir-ls/language_server.sh" };
+    cmd = { "/home/lucasjoviniano/elixir-ls/language_server.sh" };
 }
 
 require("todo-comments").setup {}
@@ -218,3 +215,12 @@ cmp.setup({
       end,
   },
 })
+
+vim.cmd [[ let g:blamer_enabled              = 1 ]]
+vim.cmd [[ let g:blamer_delay                = 200 ]]
+vim.cmd [[ let g:blamer_show_in_visual_modes = 1 ]]
+vim.cmd [[ let g:blamer_show_in_insert_modes = 1 ]]
+vim.cmd [[ let g:blamer_prefix               = ' > ' ]]
+vim.cmd [[ let g:blamer_template             = '<committer>, <committer-time> • <summary>' ]]
+vim.cmd [[ let g:blamer_date_format          = '%d/%m/%y' ]]
+vim.keymap.set('n', '<Enter>', ':EasyAlign<cr>')

@@ -2,6 +2,7 @@
 alias vim=nvim
 alias ls=exa
 alias cat=batcat
+alias bat=batcat
 abbr -a reload exec fish
 
 abbr -a v nvim

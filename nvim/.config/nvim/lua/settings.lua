@@ -21,6 +21,17 @@ vim.opt.wrap = false
 vim.cmd [[colorscheme miramare]]
 vim.cmd [[let mapleader=","]]
 
+vim.cmd [[ let g:loaded_gzip         = 1 ]]
+vim.cmd [[ let g:loaded_tar          = 1 ]]
+vim.cmd [[ let g:loaded_tarPlugin    = 1 ]]
+vim.cmd [[ let g:loaded_zipPlugin    = 1 ]]
+vim.cmd [[ let g:loaded_2html_plugin = 1 ]]
+vim.cmd [[ let g:loaded_netrw        = 1 ]]
+vim.cmd [[ let g:loaded_netrwPlugin  = 1 ]]
+vim.cmd [[ let g:loaded_matchit      = 1 ]]
+vim.cmd [[ let g:loaded_matchparen   = 1 ]]
+vim.cmd [[ let g:loaded_spec         = 1 ]]
+
 vim.cmd [[autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_sync()]]
 
 vim.keymap.set("n", '<leader>fg', '<cmd>Telescope live_grep<cr>')

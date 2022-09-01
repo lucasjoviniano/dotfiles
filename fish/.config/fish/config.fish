@@ -1,4 +1,7 @@
 source ~/.config/fish/alias.fish
+source ~/.asdf/asdf.fish
+
+set fish_greeting
 
 set -g fish_color_autosuggestion '555'  'brblack'
 set -g fish_color_cancel -r
