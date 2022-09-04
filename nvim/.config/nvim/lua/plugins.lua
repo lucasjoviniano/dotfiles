@@ -1,226 +1,124 @@
-require "paq" {
-	"savq/paq-nvim";
-	"franbach/miramare";
-  "nvim-treesitter/nvim-treesitter";
-  "sheerun/vim-polyglot";
-  "nvim-lua/plenary.nvim";
-  {"nvim-telescope/telescope.nvim", branch="0.1.x"};
-  "nvim-lualine/lualine.nvim";
-  "kyazdani42/nvim-web-devicons";
-  "kyazdani42/nvim-tree.lua";
-  "williamboman/mason.nvim";
-  "williamboman/mason-lspconfig.nvim";
-  "neovim/nvim-lspconfig";
-  "simrat39/rust-tools.nvim";
-  "hrsh7th/nvim-cmp"; 
-  "hrsh7th/cmp-nvim-lsp";
-  "hrsh7th/cmp-nvim-lua";
-  "hrsh7th/cmp-nvim-lsp-signature-help";
-  "hrsh7th/cmp-vsnip";                             
-  "hrsh7th/cmp-path";                              
-  "hrsh7th/cmp-buffer";                            
-  "hrsh7th/vim-vsnip";
-  "puremourning/vimspector";
-  "lewis6991/impatient.nvim";
-  "voldikss/vim-floaterm";
-  "nvim-lua/plenary.nvim";
-  "folke/todo-comments.nvim";
-  "windwp/nvim-autopairs";
-  "tpope/vim-surround";
-  "tpope/vim-commentary";
-  "wakatime/vim-wakatime";
-  "APZelos/blamer.nvim";
-  "folke/trouble.nvim";
-  "junegunn/vim-easy-align"
-}
+vim.cmd([[packadd packer.nvim]])
 
--- local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
--- require("null-ls").setup({
---     sources = {
---         require("null-ls").builtins.formatting.gofmt,
---     },
---     -- you can reuse a shared lspconfig on_attach callback here
---     -- on_attach = function(client, bufnr)
---     --     if client.supports_method("textDocument/formatting") then
---     --         vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
---     --         vim.api.nvim_create_autocmd("BufWritePre", {
---     --             group = augroup,
---     --             buffer = bufnr,
---     --             callback = function()
---     --                 -- on 0.8, you should use vim.lsp.buf.format({ bufnr = bufnr }) instead
---     --                 vim.lsp.buf.formatting_sync()
---     --             end,
---     --         })
---     --     end
---     -- end,
--- })
+return require("packer").startup(function(use)
+	use("wbthomason/packer.nvim")
 
-require("trouble").setup {}
+	use({
+		"nvim-telescope/telescope.nvim",
+		requires = { "nvim-lua/plenary.nvim", "nvim-lua/popup.nvim" },
+		config = function()
+			require("config.telescope")
+		end,
+	})
 
-require'lspconfig'.gopls.setup{}
+	use({
+		"rcarriga/nvim-notify",
+		config = function()
+			require("config.notify")
+		end,
+	})
 
-require'lspconfig'.emmet_ls.setup{}
+	use({
+		"gelguy/wilder.nvim",
+		run = ":UpdateRemotePlugins",
+		config = function()
+			require("config.wilder")
+		end,
+	})
 
-require'lspconfig'.elixirls.setup{
-    cmd = { "/home/lucasjoviniano/elixir-ls/language_server.sh" };
-}
+	use({
+		"nvim-treesitter/nvim-treesitter",
+		run = "TSUpdate",
+		config = function()
+			require("config.treesitter")
+		end,
+	})
 
-require("todo-comments").setup {}
-require("nvim-autopairs").setup {}
+	use({
+		"williamboman/mason.nvim",
+		requires = { "neovim/nvim-lspconfig", "williamboman/mason-lspconfig.nvim" },
+		config = function()
+			require("config.mason")
+		end,
+	})
 
-require("nvim-tree").setup()
+	use({
+		"hrsh7th/nvim-cmp",
+		requires = {
+			"f3fora/cmp-spell",
+			"hrsh7th/cmp-buffer",
+			"hrsh7th/cmp-calc",
+			"hrsh7th/cmp-emoji",
+			"hrsh7th/cmp-nvim-lsp",
+			"hrsh7th/cmp-nvim-lua",
+			"hrsh7th/cmp-path",
+			"quangnguyen30192/cmp-nvim-tags",
+			"ray-x/cmp-treesitter",
+			"lukas-reineke/cmp-rg",
+			"petertriho/cmp-git",
+		},
+		config = function()
+			require("config.cmp")
+		end,
+	})
 
-require("mason").setup()
-require("mason-lspconfig").setup()
+	use({
+		"folke/trouble.nvim",
+		requires = "kyazdani42/nvim-web-devicons",
+		config = function()
+			require("config.trouble")
+		end,
+	})
 
-require('lualine').setup()
+	use({ "RRethy/nvim-treesitter-endwise", ft = { "lua", "ruby", "elixir" } })
 
-require('nvim-treesitter.configs').setup {
-  ensure_installed = { "lua", "rust", "toml", "go", "elixir" },
-  auto_install = true,
-  highlight = {
-    enable = true,
-    additional_vim_regex_highlighting=false,
-  },
-  ident = { enable = true }, 
-  rainbow = {
-    enable = true,
-    extended_mode = true,
-    max_file_lines = nil,
-  }
-}
+	use({
+		"b3nj5m1n/kommentary",
+		config = function()
+			require("config.kommentary")
+		end,
+	})
 
-local opts = { noremap=true, silent=true }
-vim.keymap.set('n', '<space>e', vim.diagnostic.open_float, opts)
-vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
-vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
-vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist, opts)
+	use({
+		"kyazdani42/nvim-tree.lua",
+		requires = { "kyazdani42/nvim-web-devicons" },
+		config = function()
+			require("config.tree")
+		end,
+	})
 
--- Use an on_attach function to only map the following keys
--- after the language server attaches to the current buffer
-local on_attach = function(client, bufnr)
-  -- Enable completion triggered by <c-x><c-o>
-  vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+	use({
+		"hoob3rt/lualine.nvim",
+		requires = { "kyazdani42/nvim-web-devicons", opt = true },
+		config = function()
+			require("config.lualine")
+		end,
+	})
 
-  -- Mappings.
-  -- See `:help vim.lsp.*` for documentation on any of the below functions
-  local bufopts = { noremap=true, silent=true, buffer=bufnr }
-  vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
-  vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
-  vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
-  vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
-  vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, bufopts)
-  vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, bufopts)
-  vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, bufopts)
-  vim.keymap.set('n', '<space>wl', function()
-    print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-  end, bufopts)
-  vim.keymap.set('n', '<space>D', vim.lsp.buf.type_definition, bufopts)
-  vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, bufopts)
-  vim.keymap.set('n', '<space>ca', vim.lsp.buf.code_action, bufopts)
-  vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)
-  vim.keymap.set('n', '<space>f', vim.lsp.buf.formatting, bufopts)
-end
+	use({
+		"jose-elias-alvarez/null-ls.nvim",
+		config = function()
+			require("config.null_ls")
+		end,
+	})
 
-local lsp_flags = {
-  -- This is the default in Nvim 0.7+
-  debounce_text_changes = 150,
-}
-require('lspconfig')['pyright'].setup{
-    on_attach = on_attach,
-    flags = lsp_flags,
-}
-require('lspconfig')['tsserver'].setup{
-    on_attach = on_attach,
-    flags = lsp_flags,
-}
-require('lspconfig')['rust_analyzer'].setup{
-    on_attach = on_attach,
-    flags = lsp_flags,
-    -- Server-specific settings...
-    settings = {
-      ["rust-analyzer"] = {}
-    }
-}
+	use({
+		"Maan2003/lsp_lines.nvim",
+		config = function()
+			require("config.lsp_lines")
+		end,
+	})
 
-local rt = {
-    server = {
-        settings = {
-            on_attach = function(_, bufnr)
-                -- Hover actions
-                vim.keymap.set("n", "<C-space>", rt.hover_actions.hover_actions, { buffer = bufnr })
-                -- Code action groups
-                vim.keymap.set("n", "<Leader>a", rt.code_action_group.code_action_group, { buffer = bufnr })
-                require 'illuminate'.on_attach(client)
-            end,
-            ["rust-analyzer"] = {
-                checkOnSave = {
-                    command = "clippy"
-                }, 
-            },
-        }
-    },
-}
-require('rust-tools').setup(rt)
+	use({ "markonm/traces.vim" })
+	use({
+		"winston0410/range-highlight.nvim",
+		requires = { "winston0410/cmd-parser.nvim" },
+		config = function()
+			require("config.traces")
+		end,
+	})
 
--- Completion Plugin Setup
-local cmp = require'cmp'
-cmp.setup({
-  -- Enable LSP snippets
-  snippet = {
-    expand = function(args)
-        vim.fn["vsnip#anonymous"](args.body)
-    end,
-  },
-  mapping = {
-    ['<C-p>'] = cmp.mapping.select_prev_item(),
-    ['<C-n>'] = cmp.mapping.select_next_item(),
-    -- Add tab support
-    ['<S-Tab>'] = cmp.mapping.select_prev_item(),
-    ['<Tab>'] = cmp.mapping.select_next_item(),
-    ['<C-S-f>'] = cmp.mapping.scroll_docs(-4),
-    ['<C-f>'] = cmp.mapping.scroll_docs(4),
-    ['<C-Space>'] = cmp.mapping.complete(),
-    ['<C-e>'] = cmp.mapping.close(),
-    ['<CR>'] = cmp.mapping.confirm({
-      behavior = cmp.ConfirmBehavior.Insert,
-      select = true,
-    })
-  },
-  -- Installed sources:
-  sources = {
-    { name = 'path' },                              -- file paths
-    { name = 'nvim_lsp', keyword_length = 3 },      -- from language server
-    { name = 'nvim_lsp_signature_help'},            -- display function signatures with current parameter emphasized
-    { name = 'nvim_lua', keyword_length = 2},       -- complete neovim's Lua runtime API such vim.lsp.*
-    { name = 'buffer', keyword_length = 2 },        -- source current buffer
-    { name = 'vsnip', keyword_length = 2 },         -- nvim-cmp source for vim-vsnip 
-    { name = 'calc'},                               -- source for math calculation
-  },
-  window = {
-      completion = cmp.config.window.bordered(),
-      documentation = cmp.config.window.bordered(),
-  },
-  formatting = {
-      fields = {'menu', 'abbr', 'kind'},
-      format = function(entry, item)
-          local menu_icon ={
-              nvim_lsp = 'λ',
-              vsnip = '⋗',
-              buffer = 'Ω',
-              path = '🖫',
-          }
-          item.menu = menu_icon[entry.source.name]
-          return item
-      end,
-  },
-})
+	use("ayu-theme/ayu-vim")
 
-vim.cmd [[ let g:blamer_enabled              = 1 ]]
-vim.cmd [[ let g:blamer_delay                = 200 ]]
-vim.cmd [[ let g:blamer_show_in_visual_modes = 1 ]]
-vim.cmd [[ let g:blamer_show_in_insert_modes = 1 ]]
-vim.cmd [[ let g:blamer_prefix               = ' > ' ]]
-vim.cmd [[ let g:blamer_template             = '<committer>, <committer-time> • <summary>' ]]
-vim.cmd [[ let g:blamer_date_format          = '%d/%m/%y' ]]
-vim.keymap.set('n', '<Enter>', ':EasyAlign<cr>')
+	use("wakatime/vim-wakatime")
+end)

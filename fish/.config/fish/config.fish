@@ -1,5 +1,5 @@
 source ~/.config/fish/alias.fish
-source ~/.asdf/asdf.fish
+source /opt/asdf-vm/asdf.fish
 
 set fish_greeting
 

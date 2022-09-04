@@ -1,0 +1,31 @@
+# This file contains fish universal variable definitions.
+# VERSION: 3.0
+SETUVAR __fish_initialized:3400
+SETUVAR _fish_abbr_ga:git\x20add
+SETUVAR _fish_abbr_gc:git\x20commit
+SETUVAR _fish_abbr_gca:git\x20commit\x20\x2d\x2damend
+SETUVAR _fish_abbr_gcl:git\x20clone
+SETUVAR _fish_abbr_gcm:git\x20commit\x20\x2dm
+SETUVAR _fish_abbr_gco:git\x20checkout
+SETUVAR _fish_abbr_gd:git\x20diff
+SETUVAR _fish_abbr_gds:git\x20diff\x20\x2d\x2dstaged
+SETUVAR _fish_abbr_gf:git\x20fetch
+SETUVAR _fish_abbr_gfc:git\x20findcommit
+SETUVAR _fish_abbr_gfm:git\x20findmessage
+SETUVAR _fish_abbr_gl:git\x20l
+SETUVAR _fish_abbr_gp:git\x20push
+SETUVAR _fish_abbr_gpl:git\x20pull
+SETUVAR _fish_abbr_gr:git\x20rebase\x20\x2di\x20HEAD\x7e15
+SETUVAR _fish_abbr_gs:git\x20status\x20\x2dsb
+SETUVAR _fish_abbr_l:ls\x20\x2dla
+SETUVAR _fish_abbr_reload:exec\x20fish
+SETUVAR _fish_abbr_tree:exa\x20\x2d\x2dtree
+SETUVAR _fish_abbr_v:nvim
+SETUVAR fish_color_host_remote:yellow
+SETUVAR fish_color_status:red
+SETUVAR fish_key_bindings:fish_default_key_bindings
+SETUVAR fish_pager_color_completion:normal
+SETUVAR fish_pager_color_description:B3A06D\x1eyellow\x1e\x2di
+SETUVAR fish_pager_color_prefix:cyan\x1e\x2d\x2dbold\x1e\x2d\x2dunderline
+SETUVAR fish_pager_color_progress:brwhite\x1e\x2d\x2dbackground\x3dcyan
+SETUVAR fish_pager_color_selected_background:\x2dr
