@@ -1,4 +1,23 @@
+-- bootstrap Packer
+local packer_path = "/site/pack/packer/start/packer.nvim"
+local install_path = vim.fn.stdpath("data") .. packer_path
+if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
+	local repo = "https://github.com/wbthomason/packer.nvim"
+	local clone = { "git", "clone", "--depth", "1", repo, install_path }
+	PackerBboostraped = vim.fn.system(clone)
+end
+
 vim.cmd([[packadd packer.nvim]])
+
+if PackerBboostraped then
+	require("packer").sync()
+end
+
+local packer_user_config = vim.api.nvim_create_augroup("PackerUserConfig", {})
+vim.api.nvim_create_autocmd(
+	"BufWritePost",
+	{ group = packer_user_config, pattern = "plugins.lua", command = "source <afile> | PackerCompile" }
+)
 
 return require("packer").startup(function(use)
 	use("wbthomason/packer.nvim")
@@ -70,8 +89,6 @@ return require("packer").startup(function(use)
 		end,
 	})
 
-	use({ "RRethy/nvim-treesitter-endwise", ft = { "lua", "ruby", "elixir" } })
-
 	use({
 		"b3nj5m1n/kommentary",
 		config = function()
@@ -118,7 +135,20 @@ return require("packer").startup(function(use)
 		end,
 	})
 
+	use("L3MON4D3/LuaSnip")
+
+	use("saadparwaiz1/cmp_luasnip")
+
 	use("ayu-theme/ayu-vim")
 
 	use("wakatime/vim-wakatime")
+
+	use({
+		"neovim/nvim-lspconfig",
+		config = function()
+			require("config.lsp_config")
+		end,
+	})
+
+	use("m4xshen/autoclose.nvim")
 end)

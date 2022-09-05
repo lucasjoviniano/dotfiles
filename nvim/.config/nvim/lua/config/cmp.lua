@@ -8,6 +8,11 @@ cmp.setup({
     ["<C-e>"] = cmp.mapping.close(),
     ["<CR>"] = cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Insert, select = true }),
   },
+  snippet = {
+      expand = function(args)
+        require'luasnip'.lsp_expand(args.body)
+      end
+    },
   sources = {
     { name = "nvim_lua" },
     { name = "nvim_lsp" },
@@ -20,6 +25,7 @@ cmp.setup({
     { name = "emoji" },
     { name = "buffer" },
     { name = "calc" },
+    { name = "luasnip" },
   },
   formatting = {
     format = function(_, vim_item)
