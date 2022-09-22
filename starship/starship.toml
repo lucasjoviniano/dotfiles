@@ -1,4 +1,5 @@
 ignore_timeout = true
+command_timeout = 1000000000000000000
 
 [aws]
 symbol = "  "

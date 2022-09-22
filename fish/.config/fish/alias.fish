@@ -7,6 +7,7 @@ abbr -a reload exec fish
 abbr -a v nvim
 abbr -a l ls -la
 abbr -a tree exa --tree
+abbr -a h helix
 
 # git
 abbr -a gs  git status -sb

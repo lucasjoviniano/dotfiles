@@ -17,10 +17,16 @@ SETUVAR _fish_abbr_gp:git\x20push
 SETUVAR _fish_abbr_gpl:git\x20pull
 SETUVAR _fish_abbr_gr:git\x20rebase\x20\x2di\x20HEAD\x7e15
 SETUVAR _fish_abbr_gs:git\x20status\x20\x2dsb
+SETUVAR _fish_abbr_h:helix
 SETUVAR _fish_abbr_l:ls\x20\x2dla
 SETUVAR _fish_abbr_reload:exec\x20fish
 SETUVAR _fish_abbr_tree:exa\x20\x2d\x2dtree
 SETUVAR _fish_abbr_v:nvim
+SETUVAR _fisher_catppuccin_2F_fish_files:\x7e/\x2econfig/fish/themes/Catppuccin\x20Frappe\x2etheme\x1e\x7e/\x2econfig/fish/themes/Catppuccin\x20Latte\x2etheme\x1e\x7e/\x2econfig/fish/themes/Catppuccin\x20Macchiato\x2etheme\x1e\x7e/\x2econfig/fish/themes/Catppuccin\x20Mocha\x2etheme
+SETUVAR _fisher_jorgebucaran_2F_fisher_files:\x7e/\x2econfig/fish/functions/fisher\x2efish\x1e\x7e/\x2econfig/fish/completions/fisher\x2efish
+SETUVAR _fisher_lilyball_2F_nix_2D_env_2E_fish_files:\x7e/\x2econfig/fish/conf\x2ed/nix\x2denv\x2efish
+SETUVAR _fisher_plugins:jorgebucaran/fisher\x1ecatppuccin/fish\x1elilyball/nix\x2denv\x2efish
+SETUVAR _fisher_upgraded_to_4_4:\x1d
 SETUVAR fish_color_host_remote:yellow
 SETUVAR fish_color_status:red
 SETUVAR fish_key_bindings:fish_default_key_bindings
@@ -29,4 +35,4 @@ SETUVAR fish_pager_color_description:B3A06D\x1eyellow\x1e\x2di
 SETUVAR fish_pager_color_prefix:cyan\x1e\x2d\x2dbold\x1e\x2d\x2dunderline
 SETUVAR fish_pager_color_progress:brwhite\x1e\x2d\x2dbackground\x3dcyan
 SETUVAR fish_pager_color_selected_background:\x2dr
-SETUVAR fish_user_paths:/home/lucasjoviniano/\x2ecargo/bin\x1e/home/lucasjoviniano/\x2elocal/bin
+SETUVAR fish_user_paths:/home/lucasjoviniano/elixir\x2dls\x1e/home/lucasjoviniano/\x2ecargo/bin\x1e/home/lucasjoviniano/\x2elocal/bin

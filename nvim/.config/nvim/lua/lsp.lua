@@ -1,158 +1,132 @@
-local lsp_config = require("lspconfig")
-local mason = require("mason")
-local mason_lsp_config = require("mason-lspconfig")
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities.textDocument.completion.completionItem.snippetSupport = true
 
-M = {}
+local lspkind = require("lspkind")
 
-M.diagnostic_on_notify = function()
-    local opts = {
-        format = function(item)
-            local severity = vim.log.levels.INFO
-            if item.severity == vim.diagnostic.severity.ERROR then
-                severity = vim.log.levels.ERROR
-            end
-            if item.severity == vim.diagnostic.severity.WARN then
-                severity = vim.log.levels.WARN
-            end
+local function config(_config)
+	return vim.tbl_deep_extend("force", {
+		capabilities = require("cmp_nvim_lsp").update_capabilities(vim.lsp.protocol.make_client_capabilities()),
+		on_attach = function()
+			vim.keymap.set("n", "gd", function()
+				vim.lsp.buf.definition()
+			end)
+			vim.keymap.set("n", "K", function()
+				vim.lsp.buf.hover()
+			end)
+			vim.keymap.set("n", "<leader>vws", function()
+				vim.lsp.buf.workspace_symbol()
+			end)
+			vim.keymap.set("n", "<leader>vd", function()
+				vim.diagnostic.open_float()
+			end)
+			vim.keymap.set("n", "[d", function()
+				vim.diagnostic.goto_next()
+			end)
+			vim.keymap.set("n", "]d", function()
+				vim.diagnostic.goto_prev()
+			end)
+			vim.keymap.set("n", "<leader>vca", function()
+				vim.lsp.buf.code_action()
+			end)
+			vim.keymap.set("n", "<leader>vco", function()
+				vim.lsp.buf.code_action({
+					filter = function(code_action)
+						if not code_action or not code_action.data then
+							return false
+						end
 
-            local message = string.format("%d:%d %s", item.lnum, item.col, item.message)
-            vim.notify(message, severity, { title = item.source })
-            return item.message
-        end,
-    }
-
-    local bufnr, _ = vim.diagnostic.open_float(opts)
-    if bufnr ~= nil then
-        vim.cmd("bw " .. bufnr)
-    end
+						local data = code_action.data.id
+						return string.sub(data, #data - 1, #data) == ":0"
+					end,
+					apply = true,
+				})
+			end)
+			vim.keymap.set("n", "<leader>vrr", function()
+				vim.lsp.buf.references()
+			end)
+			vim.keymap.set("n", "<leader>vrn", function()
+				vim.lsp.buf.rename()
+			end)
+			vim.keymap.set("i", "<C-h>", function()
+				vim.lsp.buf.signature_help()
+			end)
+		end,
+	}, _config or {})
 end
 
-local function on_attach(client, bufnr)
-    vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.lsp.omnifunc")
+require'lspconfig'.hls.setup(config({
+    filetypes = { "haskell", "lhaskell", "hs" }
+}))
 
-    local opts = { silent = true, noremap = true, buffer = true }
-    local mappings = {
-        { "n", "gd", vim.lsp.buf.definition, opts },
-        { "n", "gr", vim.lsp.buf.rename, opts },
-        { "n", "gs", vim.lsp.buf.hover, opts },
-        { "n", "[e", vim.lsp.diagnostic.goto_next, opts },
-        { "n", "]e", vim.lsp.diagnostic.goto_prev, opts },
-        { "n", "<leader>d", require("lsp").diagnostic_on_notify, opts },
-        { "n", "<leader>lsp", require("telescope.builtin").lsp_document_symbols, opts },
-        { "n", "<leader>ptc", require("lsp").toggle_pyright_type_checking, opts },
-    }
-    for _, mapping in pairs(mappings) do
-        vim.keymap.set(unpack(mapping))
-    end
+require("lspconfig").elixirls.setup(config({
+	cmd = { "/home/lucasjoviniano/elixir-ls/language_server.sh" },
+}))
 
-    if client.resolved_capabilities.document_highlight then
-        vim.api.nvim_create_augroup("LspDocumentHighlight", {})
-        vim.api.nvim_create_autocmd("CursorHold", {
-            pattern = "<buffer>",
-            callback = function()
-                vim.lsp.buf.document_highlight()
-            end,
-        })
-        vim.api.nvim_create_autocmd("CursorMoved", {
-            pattern = "<buffer>",
-            callback = function()
-                vim.lsp.buf.clear_references()
-            end,
-        })
-    end
-end
+require("lspconfig").clangd.setup(config())
 
-M.make_config = function()
-    local capabilities = vim.lsp.protocol.make_client_capabilities()
-    capabilities.textDocument.completion.completionItem.snippetSupport = true
-    capabilities.textDocument.completion.completionItem.resolveSupport = {
-        properties = { "documentation", "detail", "additionalTextEdits" },
-    }
-    capabilities = require("cmp_nvim_lsp").update_capabilities(capabilities)
-    return { on_attach = on_attach, capabilities = capabilities }
-end
-
-local base = {
-    servers = {
-        "cssls",
-        "yamlls",
-    },
-    linters = {
-        "markdownlint",
-        "shellcheck",
-        "vale",
-    },
-    formatters = {
-        "sql-formatter",
-        "stylua",
-    },
-}
-
-local extra = {
-    servers = {},
-    linters = {},
-    formatters = {},
-}
-
-extra = {
-    servers = {
-        "bashls",
-        "dockerls",
-        "elmls",
-        "gopls",
-        "jsonls",
-        "pyright",
-        "rust_analyzer",
-        "elixirls",
-    },
-    linters = {
-        "flake8",
-        "staticcheck",
-    },
-    formatters = {
-        "isort",
-        "prettier",
-    },
-}
-
-M.to_install = {
-    servers = {},
-    linters = {},
-    formatters = {},
-}
-
-for key, _ in pairs(M.to_install) do
-    for _, src in pairs({ base, extra }) do
-        for _, value in pairs(src[key]) do
-            table.insert(M.to_install[key], value)
+function go_org_imports(wait_ms)
+    local params = vim.lsp.util.make_range_params()
+    params.context = {only = {"source.organizeImports"}}
+    local result = vim.lsp.buf_request_sync(0, "textDocument/codeAction", params, wait_ms)
+    for cid, res in pairs(result or {}) do
+      for _, r in pairs(res.result or {}) do
+        if r.edit then
+          local enc = (vim.lsp.get_client_by_id(cid) or {}).offset_encoding or "utf-16"
+          vim.lsp.util.apply_workspace_edit(r.edit, enc)
         end
+      end
     end
 end
 
-M.toggle_pyright_type_checking = function()
-    local name = "pyright"
-    local type_checking = true
+require("lspconfig").gopls.setup(config({
+    settings = {
+      gopls = {
+        analyses = {
+          unusedparams = true,
+        },
+        staticcheck = true,
+      },
+}}))
 
-    local clients = vim.lsp.buf_get_clients(0)
-    for _, client in pairs(clients) do
-        if client.name == name then
-            type_checking = client.config.settings.python.analysis.typeCheckingMode == "off"
-            vim.lsp.stop_client(client.id)
-            break
-        end
-    end
+vim.cmd [[autocmd BufWritePre *.go lua go_org_imports()]]
 
-    for _, server in pairs(mason_lsp_config.get_installed_servers()) do
-        if server.name == name then
-            local config = make_config()
-            if not type_checking then
-                config.settings = { python = { analysis = { typeCheckingMode = "off" } } }
-            end
+require'lspconfig'.rust_analyzer.setup(config({
+    cmd = { "rustup", "run", "nightly", "rust-analyzer" },
+}))
 
-            lsp_config[server].setup(config)
-            break
-        end
-    end
-end
+local opts = {
+	-- whether to highlight the currently hovered symbol
+	-- disable if your cpu usage is higher than you want it
+	-- or you just hate the highlight
+	-- default: true
+	highlight_hovered_item = true,
 
-return M
+	-- whether to show outline guides
+	-- default: true
+	show_guides = true,
+}
+
+require("symbols-outline").setup(opts)
+
+require'lspconfig'.sumneko_lua.setup {
+  settings = {
+    Lua = {
+      runtime = {
+        -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
+        version = 'LuaJIT',
+      },
+      diagnostics = {
+        -- Get the language server to recognize the `vim` global
+        globals = {'vim'},
+      },
+      workspace = {
+        -- Make the server aware of Neovim runtime files
+        library = vim.api.nvim_get_runtime_file("", true),
+      },
+      -- Do not send telemetry data containing a randomized but unique identifier
+      telemetry = {
+        enable = false,
+      },
+    },
+  },
+}

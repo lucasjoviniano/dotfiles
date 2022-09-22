@@ -1,7 +1,12 @@
+local function list(value, str, sep)
+	sep = sep or ","
+	str = str or ""
+	value = type(value) == "table" and table.concat(value, sep) or value
+	return str ~= "" and table.concat({ value, str }, sep) or value
+end
+
 local function set_mappings()
 	local mappings = {
-		{ "n", "<leader>,", "<Cmd>nohl<CR>" },
-		{ "n", "<leader>ls", "'0<CR>" },
 		{ "n", "<Leader>n", ":set relativenumber!<CR>" },
 		-- buffer and aplist navigation
 		{ "n", "<leader><leader>", "<C-^>" },
@@ -26,21 +31,26 @@ local function set_mappings()
 		-- autocomplete line and filename
 		{ "i", "<C-l>", "<C-x><C-l>" },
 		{ "i", "<C-f>", "<C-x><C-f>" },
-		-- stop c, s and d from yanking
-		{ "n", "c", [["_c]] },
-		{ "x", "c", [["_c]] },
-		{ "n", "s", [["_s]] },
-		{ "x", "s", [["_s]] },
-		{ "n", "d", [["_d]] },
-		{ "x", "d", [["_d]] },
-		-- stop p from overwtitting the register (by re-yanking it)
-		{ "x", "p", "pgvy" },
 		-- keep centered when n/N/J
 		{ "n", "n", "nzz" },
 		{ "n", "N", "Nzz" },
 		{ "n", "J", "mzJ`z" },
 		-- select the end of the line without linebreak
 		{ "v", "$", "$h" },
+		-- window splits
+		{ "n", "<leader>v", "<Cmd>vsp<CR>" },
+		{ "n", "<leader>s", "<Cmd>sp<CR>" },
+		-- window resizes
+		{ "n", "<C-M-h>", "<Cmd>vertical res -2<CR>" },
+		{ "n", "<C-M-l>", "<Cmd>vertical res +2<CR>" },
+		{ "n", "<C-M-j>", "<Cmd>res +1<CR>" },
+		{ "n", "<C-M-k>", "<Cmd>res -1<CR>" },
+		-- select all
+		{ "n", "<C-A>", "ggVG" },
+		{ "i", "<C-A>", "<ESC>ggVG" },
+		{ "v", "<C-A>", "<ESC>ggVG" },
+		-- turn off search highlight,
+		{ "n", "<Esc>", "<Cmd>noh<CR>" },
 	}
 
 	for _, val in pairs(mappings) do
@@ -50,30 +60,37 @@ end
 
 local function set_options()
 	local options = {
-		autoindent = true,
-		autoread = true,
-		clipboard = "unnamed,unnamedplus",
-		colorcolumn = "80,88,120",
-		cursorline = true,
-		expandtab = true,
-		foldenable = false,
-		hidden = true,
-		ignorecase = true,
-		mouse = "a",
+		nu = true,
+		errorbells = false,
+		termguicolors = true,
+		smartindent = true,
+		wrap = false,
+		swapfile = false,
+		backup = false,
+		hlsearch = false,
+		incsearch = true,
+		scrolloff = 8,
+		signcolumn = "yes",
+		cmdheight = 1,
+		updatetime = 50,
+		colorcolumn = "80",
 		number = true,
 		relativenumber = true,
-		scrolloff = 5,
-		shell = "/bin/fish",
+		autoindent = true,
 		shiftwidth = 4,
+		tabstop = 4,
+		softtabstop = -1,
+		expandtab = true,
+		ignorecase = true,
 		smartcase = true,
-		smartindent = true,
-		softtabstop = 4,
+		wildignorecase = true,
+		showcmd = true,
+		mouse = "a",
+		hidden = true,
+		cursorline = true,
 		splitbelow = true,
 		splitright = true,
-		tabstop = 4,
-		termguicolors = true,
-		wildignore = "*/tmp/*,*.so,*.swp,*.zip,*.pyc,*.db,*.sqlite",
-		laststatus = 3,
+		backspace = list({ "indent", "eol", "start" }),
 	}
 	for key, val in pairs(options) do
 		vim.opt[key] = val
@@ -90,7 +107,7 @@ local function set_options()
 	end
 
 	local markdown_filetypes = vim.api.nvim_create_augroup("MarkdownExtentions", {})
-	local markdown_extentions = { "md", "adoc" }
+	local markdown_extentions = { "md", "adoc", "Rmd", "livemd" }
 	for _, ext in pairs(markdown_extentions) do
 		vim.api.nvim_create_autocmd(
 			{ "BufNewFile", "BufRead" },
@@ -126,7 +143,7 @@ local function set_options()
 end
 
 vim.g.mapleader = " "
-vim.cmd [[colorscheme ayu]]
+vim.cmd([[colorscheme catppuccin]])
 
 set_mappings()
 set_options()

@@ -23,6 +23,21 @@ return require("packer").startup(function(use)
 	use("wbthomason/packer.nvim")
 
 	use({
+		"sbdchd/neoformat",
+	})
+
+	use({
+		"TimUntersberger/neogit",
+		config = function()
+			require("config.neogit")
+		end,
+	})
+
+	use("nvim-lua/plenary.nvim")
+
+	use("nvim-lua/popup.nvim")
+
+	use({
 		"nvim-telescope/telescope.nvim",
 		requires = { "nvim-lua/plenary.nvim", "nvim-lua/popup.nvim" },
 		config = function()
@@ -31,33 +46,17 @@ return require("packer").startup(function(use)
 	})
 
 	use({
-		"rcarriga/nvim-notify",
+		"hoob3rt/lualine.nvim",
+		requires = { "kyazdani42/nvim-web-devicons", opt = true },
 		config = function()
-			require("config.notify")
+			require("config.lualine")
 		end,
 	})
 
 	use({
-		"gelguy/wilder.nvim",
-		run = ":UpdateRemotePlugins",
+		"neovim/nvim-lspconfig",
 		config = function()
-			require("config.wilder")
-		end,
-	})
-
-	use({
-		"nvim-treesitter/nvim-treesitter",
-		run = "TSUpdate",
-		config = function()
-			require("config.treesitter")
-		end,
-	})
-
-	use({
-		"williamboman/mason.nvim",
-		requires = { "neovim/nvim-lspconfig", "williamboman/mason-lspconfig.nvim" },
-		config = function()
-			require("config.mason")
+			require("config.lsp_config")
 		end,
 	})
 
@@ -71,13 +70,50 @@ return require("packer").startup(function(use)
 			"hrsh7th/cmp-nvim-lsp",
 			"hrsh7th/cmp-nvim-lua",
 			"hrsh7th/cmp-path",
-			"quangnguyen30192/cmp-nvim-tags",
-			"ray-x/cmp-treesitter",
-			"lukas-reineke/cmp-rg",
-			"petertriho/cmp-git",
 		},
 		config = function()
 			require("config.cmp")
+		end,
+	})
+
+	use("onsails/lspkind-nvim")
+
+	use("nvim-lua/lsp_extensions.nvim")
+
+	use("glepnir/lspsaga.nvim")
+
+	use("simrat39/symbols-outline.nvim")
+
+	use({
+		"L3MON4D3/LuaSnip",
+		config = function()
+			require("config.luasnips")
+		end,
+	})
+
+	use("saadparwaiz1/cmp_luasnip")
+
+	use({
+		"gelguy/wilder.nvim",
+		run = ":UpdateRemotePlugins",
+		config = function()
+			require("config.wilder")
+		end,
+	})
+
+	use({
+		"nvim-treesitter/nvim-treesitter",
+		run = ":TSUpdate",
+		config = function()
+			require("config.treesitter")
+		end,
+	})
+
+	use("nvim-treesitter/playground")
+	use({
+		"romgrk/nvim-treesitter-context",
+		config = function()
+			require("config.treesitter-context")
 		end,
 	})
 
@@ -90,13 +126,6 @@ return require("packer").startup(function(use)
 	})
 
 	use({
-		"b3nj5m1n/kommentary",
-		config = function()
-			require("config.kommentary")
-		end,
-	})
-
-	use({
 		"kyazdani42/nvim-tree.lua",
 		requires = { "kyazdani42/nvim-web-devicons" },
 		config = function()
@@ -105,24 +134,28 @@ return require("packer").startup(function(use)
 	})
 
 	use({
-		"hoob3rt/lualine.nvim",
-		requires = { "kyazdani42/nvim-web-devicons", opt = true },
-		config = function()
-			require("config.lualine")
-		end,
-	})
-
-	use({
-		"jose-elias-alvarez/null-ls.nvim",
-		config = function()
-			require("config.null_ls")
-		end,
-	})
-
-	use({
 		"Maan2003/lsp_lines.nvim",
 		config = function()
 			require("config.lsp_lines")
+		end,
+	})
+
+	use({
+		"RRethy/vim-illuminate",
+		config = function()
+			require("config.illuminate")
+		end,
+	})
+
+	use({
+		"Darazaki/indent-o-matic",
+		config = function()
+			require("indent-o-matic").setup({
+				-- Number of lines without indentation before giving up (use -1 for infinite)
+				max_lines = 2048,
+				-- Space indentations that should be detected
+				standard_widths = { 2, 3, 4, 8 },
+			})
 		end,
 	})
 
@@ -135,20 +168,13 @@ return require("packer").startup(function(use)
 		end,
 	})
 
-	use("L3MON4D3/LuaSnip")
-
-	use("saadparwaiz1/cmp_luasnip")
-
-	use("ayu-theme/ayu-vim")
-
-	use("wakatime/vim-wakatime")
-
 	use({
-		"neovim/nvim-lspconfig",
+		"catppuccin/nvim",
+		as = "catppuccin",
 		config = function()
-			require("config.lsp_config")
+			require("config.catpuccin")
 		end,
 	})
 
-	use("m4xshen/autoclose.nvim")
+	use("wakatime/vim-wakatime")
 end)

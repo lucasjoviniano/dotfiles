@@ -1,22 +1,7 @@
 require("nvim-treesitter.configs").setup({
-    ensure_installed = {
-        "css",
-        "dockerfile",
-        "fish",
-        "go",
-        "gomod",
-        "html",
-        "javascript",
-        "json",
-        "lua",
-        "python",
-        "regex",
-        "rust",
-        "toml",
-        "yaml",
-        "elixir",
-    },
-    highlight = { enable = true, disable = {} },
+    ensure_installed = "all",
+    sync_install = false,
+    highlight = { enable = true, additional_vim_regex_highlighting = false },
     incremental_selection = {
         enable = true,
         keymaps = {
@@ -26,6 +11,4 @@ require("nvim-treesitter.configs").setup({
             node_decremental = "-",
         },
     },
-    indent = { enable = true },
-    endwise = { enable = true },
 })
