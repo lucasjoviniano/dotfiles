@@ -68,6 +68,12 @@ require("lspconfig").clangd.setup(config())
 
 require("lspconfig").r_language_server.setup(config())
 
+require("lspconfig").pyright.setup(config())
+
+require("lspconfig").solargraph.setup(config())
+
+require("lspconfig").typeprof.setup(config())
+
 function go_org_imports(wait_ms)
 	local params = vim.lsp.util.make_range_params()
 	params.context = { only = { "source.organizeImports" } }
