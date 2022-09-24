@@ -3,6 +3,10 @@ alias vim=nvim
 alias ls=exa
 alias cat=bat
 alias update-nvim-nightly="asdf uninstall neovim nightly && asdf install neovim nightly"
+alias ..="cd .."
+alias ...="cd ../.."
+alias ....="cd ../../.."
+
 abbr -a reload exec fish
 
 abbr -a v nvim
