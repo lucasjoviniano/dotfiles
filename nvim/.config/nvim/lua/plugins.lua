@@ -23,6 +23,12 @@ return require("packer").startup(function(use)
 	use("wbthomason/packer.nvim")
 
 	use({
+		"windwp/nvim-autopairs",
+		config = function()
+			require("config.autopairs")
+		end,
+	})
+	use({
 		"sbdchd/neoformat",
 	})
 
@@ -133,12 +139,12 @@ return require("packer").startup(function(use)
 		end,
 	})
 
-	use({
-		"Maan2003/lsp_lines.nvim",
-		config = function()
-			require("config.lsp_lines")
-		end,
-	})
+	--use({
+	--	"Maan2003/lsp_lines.nvim",
+	--	config = function()
+	--		require("config.lsp_lines")
+	--	end,
+	--})
 
 	use({
 		"RRethy/vim-illuminate",
