@@ -32,3 +32,8 @@ abbr -a gf  git fetch
 abbr -a gfc git findcommit
 abbr -a gfm git findmessage
 abbr -a gco git checkout
+
+function mkcd
+	mkdir $argv[1]
+	cd $argv[1]
+end

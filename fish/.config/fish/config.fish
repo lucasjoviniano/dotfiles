@@ -3,6 +3,8 @@ source /opt/asdf-vm/asdf.fish
 zoxide init fish | source
 
 export BAT_THEME="Catppuccin-mocha"
+export GOROOT=/usr/lib/go
+export GOPATH=/home/lucasjoviniano/go
 
 set fish_greeting
 

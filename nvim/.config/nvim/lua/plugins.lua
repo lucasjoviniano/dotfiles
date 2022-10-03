@@ -165,6 +165,20 @@ return require("packer").startup(function(use)
 		end,
 	})
 
+	use({
+		"MunifTanjim/nui.nvim",
+	})
+
+	use({ "rcarriga/nvim-notify" })
+
+	use({
+		"folke/noice.nvim",
+		event = "VimEnter",
+		config = function()
+			require("noice").setup()
+		end,
+	})
+
 	use({ "markonm/traces.vim" })
 	use({
 		"winston0410/range-highlight.nvim",
