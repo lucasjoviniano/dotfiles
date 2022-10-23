@@ -1,175 +1,131 @@
--- bootstrap Packer
-local packer_path = "/site/pack/packer/start/packer.nvim"
-local install_path = vim.fn.stdpath("data") .. packer_path
+local install_path = vim.fn.stdpath("data") .. "/site/pack/packer/start/packer.nvim"
+local is_bootstrap = false
 if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
-	local repo = "https://github.com/wbthomason/packer.nvim"
-	local clone = { "git", "clone", "--depth", "1", repo, install_path }
-	PackerBboostraped = vim.fn.system(clone)
+	is_bootstrap = true
+	vim.fn.execute("!git clone https://github.com/wbthomason/packer.nvim " .. install_path)
+	vim.cmd([[packadd packer.nvim]])
 end
 
-vim.cmd([[packadd packer.nvim]])
-
-if PackerBboostraped then
-	require("packer").sync()
+-- Use a protected call so we don't error out on first use
+local status_ok, packer = pcall(require, "packer")
+if not status_ok then
+	return
 end
 
-local packer_user_config = vim.api.nvim_create_augroup("PackerUserConfig", {})
-vim.api.nvim_create_autocmd(
-	"BufWritePost",
-	{ group = packer_user_config, pattern = "plugins.lua", command = "source <afile> | PackerCompile" }
-)
+packer.init({
+	autoremove = true,
+})
 
-return require("packer").startup(function(use)
-	use("wbthomason/packer.nvim")
+packer.startup(function(use)
+	-- Core
+	use("wbthomason/packer.nvim") -- Have packer manage itself
 
 	use({
-		"windwp/nvim-autopairs",
+		"lewis6991/impatient.nvim",
 		config = function()
-			require("config.autopairs")
-		end,
-	})
-	use({
-		"sbdchd/neoformat",
-	})
-
-	use({
-		"TimUntersberger/neogit",
-		config = function()
-			require("config.neogit")
+			require("impatient").enable_profile()
 		end,
 	})
 
-	use("nvim-lua/plenary.nvim")
-
-	use("nvim-lua/popup.nvim")
-
+	-- Telescope
 	use({
 		"nvim-telescope/telescope.nvim",
-		requires = { "nvim-lua/plenary.nvim", "nvim-lua/popup.nvim" },
 		config = function()
 			require("config.telescope")
 		end,
-	})
-
-	use({
-		"hoob3rt/lualine.nvim",
-		requires = { "kyazdani42/nvim-web-devicons", opt = true },
-		config = function()
-			require("config.lualine")
-		end,
-	})
-
-	use({
-		"neovim/nvim-lspconfig",
-		config = function()
-			require("config.lsp_config")
-		end,
-	})
-
-	use({
-		"hrsh7th/nvim-cmp",
 		requires = {
-			"f3fora/cmp-spell",
-			"hrsh7th/cmp-buffer",
-			"hrsh7th/cmp-calc",
-			"hrsh7th/cmp-emoji",
-			"hrsh7th/cmp-nvim-lsp",
-			"hrsh7th/cmp-nvim-lua",
-			"hrsh7th/cmp-path",
+			"nvim-lua/plenary.nvim",
 		},
-		config = function()
-			require("config.cmp")
-		end,
 	})
 
-	use("onsails/lspkind-nvim")
-
-	use("nvim-lua/lsp_extensions.nvim")
-
-	use("glepnir/lspsaga.nvim")
-
-	use("simrat39/symbols-outline.nvim")
-
-	use({
-		"L3MON4D3/LuaSnip",
-		config = function()
-			require("config.luasnips")
-		end,
-	})
-
-	use("saadparwaiz1/cmp_luasnip")
-
-	use({
-		"gelguy/wilder.nvim",
-		run = ":UpdateRemotePlugins",
-		config = function()
-			require("config.wilder")
-		end,
-	})
-
+	-- Treesitter
 	use({
 		"nvim-treesitter/nvim-treesitter",
 		run = ":TSUpdate",
 		config = function()
 			require("config.treesitter")
 		end,
+		requires = {
+			"nvim-treesitter/nvim-treesitter-textobjects",
+			"nvim-treesitter/nvim-treesitter-context",
+		},
 	})
 
-	use("nvim-treesitter/playground")
+	-- LSP
 	use({
-		"romgrk/nvim-treesitter-context",
-		config = function()
-			require("config.treesitter-context")
-		end,
-	})
+		"williamboman/mason.nvim",
+		requires = {
+			-- lsp
+			"williamboman/mason-lspconfig.nvim",
+			"onsails/lspkind-nvim",
+			"neovim/nvim-lspconfig",
+			"jose-elias-alvarez/null-ls.nvim",
+			"onsails/lspkind-nvim",
+			"simrat39/symbols-outline.nvim",
 
-	use({
-		"folke/trouble.nvim",
-		requires = "kyazdani42/nvim-web-devicons",
-		config = function()
-			require("config.trouble")
-		end,
-	})
+			-- cmp
+			"hrsh7th/nvim-cmp",
+			"hrsh7th/cmp-buffer",
+			"hrsh7th/cmp-path",
+			"hrsh7th/cmp-cmdline",
+			"hrsh7th/cmp-emoji",
+			"hrsh7th/cmp-calc",
 
-	use({
-		"kyazdani42/nvim-tree.lua",
-		requires = { "kyazdani42/nvim-web-devicons" },
-		config = function()
-			require("config.tree")
-		end,
-	})
+			-- cmp x lsp
+			"hrsh7th/cmp-nvim-lsp",
+			"hrsh7th/cmp-nvim-lsp-signature-help",
 
-	--use({
-	--	"Maan2003/lsp_lines.nvim",
-	--	config = function()
-	--		require("config.lsp_lines")
-	--	end,
-	--})
+			-- snip x cmp
+			"saadparwaiz1/cmp_luasnip",
+			"L3MON4D3/LuaSnip",
+			"rafamadriz/friendly-snippets",
 
-	use({
-		"RRethy/vim-illuminate",
+			-- autopairs (x cmp)
+			"windwp/nvim-autopairs",
+		},
 		config = function()
-			require("config.illuminate")
-		end,
-	})
-
-	use({
-		"Darazaki/indent-o-matic",
-		config = function()
-			require("indent-o-matic").setup({
-				-- Number of lines without indentation before giving up (use -1 for infinite)
-				max_lines = 2048,
-				-- Space indentations that should be detected
-				standard_widths = { 2, 3, 4, 8 },
+			require("lspkind").init()
+			require("luasnip").setup({
+				-- see: https://github.com/L3MON4D3/LuaSnip/issues/525
+				region_check_events = "InsertEnter",
+				delete_check_events = "InsertLeave",
 			})
+			require("luasnip.loaders.from_vscode").lazy_load()
+			require("nvim-autopairs").setup()
+			require("config.lsp")
+			require("config.symbols-outline")
+			require("config.cmp")
 		end,
 	})
 
 	use({
-		"MunifTanjim/nui.nvim",
+		"mfussenegger/nvim-dap",
+		config = function()
+			require("config.debug")
+		end,
+		requires = {
+			"leoluz/nvim-dap-go",
+			"rcarriga/nvim-dap-ui",
+			"theHamsta/nvim-dap-virtual-text",
+		},
 	})
 
-	use({ "rcarriga/nvim-notify" })
+	-- UI
+	use({
+		"catppuccin/nvim",
+		as = "catppuccin",
+		config = function()
+			require("config.colorscheme")
+		end,
+	})
+
+	use({
+		"nvim-lualine/lualine.nvim",
+		after = "catppuccin",
+		config = function()
+			require("config.lualine")
+		end,
+	})
 
 	use({
 		"folke/noice.nvim",
@@ -177,24 +133,72 @@ return require("packer").startup(function(use)
 		config = function()
 			require("noice").setup()
 		end,
+		requires = {
+			-- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
+			"MunifTanjim/nui.nvim",
+			-- OPTIONAL:
+			--   `nvim-notify` is only needed, if you want to use the notification view.
+			--   If not available, we use `mini` as the fallback
+			"rcarriga/nvim-notify",
+		},
 	})
 
-	use({ "markonm/traces.vim" })
 	use({
-		"winston0410/range-highlight.nvim",
-		requires = { "winston0410/cmd-parser.nvim" },
+		"kyazdani42/nvim-web-devicons",
 		config = function()
-			require("config.traces")
+			require("nvim-web-devicons").setup({
+				default = true,
+			})
 		end,
 	})
 
 	use({
-		"catppuccin/nvim",
-		as = "catppuccin",
+		"stevearc/dressing.nvim",
 		config = function()
-			require("config.catpuccin")
+			require("dressing").setup({})
 		end,
 	})
 
-	use("wakatime/vim-wakatime")
+	use({
+		"j-hui/fidget.nvim",
+		config = function()
+			require("fidget").setup({
+				text = {
+					spinner = "dots",
+				},
+				window = {
+					blend = 0,
+				},
+			})
+		end,
+	})
+
+	-- Util
+	use({
+		"lukas-reineke/indent-blankline.nvim",
+		config = function()
+			require("indent_blankline").setup({})
+		end,
+	})
+
+	use({
+		"folke/which-key.nvim",
+		config = function()
+			require("which-key").setup()
+		end,
+	})
+
+	use({
+		"folke/trouble.nvim",
+		config = function()
+			require("config.trouble")
+		end,
+	})
 end)
+
+-- Autocommand that reloads neovim whenever you save the plugins.lua file
+vim.api.nvim_create_autocmd("BufWritePost", {
+	command = "source <afile> | PackerSync",
+	group = vim.api.nvim_create_augroup("Packer", { clear = true }),
+	pattern = "plugins.lua",
+})

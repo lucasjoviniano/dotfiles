@@ -1,7 +1,9 @@
+require("options")
 require("plugins")
-require("settings")
+require("keymaps")
 
 -- hacked PackerRemove cmd
+
 PackerReinstall = function(name) -- usage example => :lua PackerReinstall "yaml.nvim"
 	if package.loaded["packer"] == nil then
 		print("Packer not installed or not loaded")

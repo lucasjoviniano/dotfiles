@@ -7,6 +7,7 @@ export GOROOT=/usr/lib/go
 export GOPATH=/home/lucasjoviniano/go
 
 set fish_greeting
+set -x DEBUGINFOD_URLS "https://debuginfod.archlinux.org"
 
 set -g fish_color_autosuggestion '555'  'brblack'
 set -g fish_color_cancel -r
@@ -34,3 +35,6 @@ thefuck --alias | source
 starship init fish | source
 
 set -q GHCUP_INSTALL_BASE_PREFIX[1]; or set GHCUP_INSTALL_BASE_PREFIX $HOME ; set -gx PATH $HOME/.cabal/bin /home/lucasjoviniano/.ghcup/bin $PATH # ghcup-env
+
+# opam configuration
+source /home/lucasjoviniano/.opam/opam-init/init.fish > /dev/null 2> /dev/null; or true
