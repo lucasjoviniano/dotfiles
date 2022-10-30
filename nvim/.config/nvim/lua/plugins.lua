@@ -124,7 +124,7 @@ packer.startup(function(use)
 
 	use("editorconfig/editorconfig-vim")
 	use("tpope/vim-repeat")
-	use("tpope/vim-surround")
+	use("machakann/vim-sandwich")
 	use("tpope/vim-abolish")
 	use("tpope/vim-eunuch")
 
