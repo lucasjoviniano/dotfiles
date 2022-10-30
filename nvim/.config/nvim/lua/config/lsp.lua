@@ -1,6 +1,7 @@
 local cmp_nvim_lsp = require("cmp_nvim_lsp")
 
 local capabilities = cmp_nvim_lsp.default_capabilities()
+capabilities.offsetEncoding = { "utf-16" }
 
 -- Use an on_attach function to only map the following keys
 -- after the language server attaches to the current buffer
@@ -107,6 +108,11 @@ lspconfig.yamlls.setup({
 	},
 })
 
+lspconfig.ocamllsp.setup({
+	capabilities = capabilities,
+	on_attach = on_attach,
+})
+
 lspconfig.html.setup({
 	capabilities = capabilities,
 	on_attach = on_attach,
@@ -169,6 +175,16 @@ lspconfig.grammarly.setup({
 	on_attach = on_attach,
 })
 
+lspconfig.clangd.setup({
+	capabilities = capabilities,
+	on_attach = on_attach,
+})
+
+lspconfig.hls.setup({
+	capabilities = capabilities,
+	on_attach = on_attach,
+})
+
 -- organize imports
 -- https://github.com/neovim/nvim-lspconfig/issues/115#issuecomment-902680058
 function OrganizeImports(timeoutms)
@@ -195,6 +211,8 @@ null_ls.setup({
 	sources = {
 		null_ls.builtins.formatting.stylua,
 		null_ls.builtins.formatting.clang_format,
+		null_ls.builtins.formatting.ocamlformat,
+		null_ls.builtins.formatting.brittany,
 	},
 	capabilities = capabilities,
 	on_attach = on_attach,

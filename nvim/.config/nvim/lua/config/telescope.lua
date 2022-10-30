@@ -21,6 +21,11 @@ telescope.setup({
 			"--hidden",
 			"--glob=!.git",
 		},
+		borderchars = {
+			prompt = { "─", " ", " ", " ", "─", "─", " ", " " },
+			results = { " " },
+			preview = { " " },
+		},
 		prompt_prefix = "   ",
 		color_devicons = true,
 	},

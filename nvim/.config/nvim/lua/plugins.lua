@@ -27,6 +27,18 @@ packer.startup(function(use)
 		end,
 	})
 
+	use("nathom/filetype.nvim")
+
+	-- Filetypes
+	use("habamax/vim-asciidoctor")
+
+	use({
+		"rmagatti/auto-session",
+		config = function()
+			require("config.session")
+		end,
+	})
+
 	-- Telescope
 	use({
 		"nvim-telescope/telescope.nvim",
@@ -110,10 +122,17 @@ packer.startup(function(use)
 		},
 	})
 
+	use("editorconfig/editorconfig-vim")
+	use("tpope/vim-repeat")
+	use("tpope/vim-surround")
+	use("tpope/vim-abolish")
+	use("tpope/vim-eunuch")
+
 	-- UI
+
 	use({
-		"catppuccin/nvim",
-		as = "catppuccin",
+		"luisiacc/gruvbox-baby",
+		as = "gruvbox",
 		config = function()
 			require("config.colorscheme")
 		end,
@@ -121,9 +140,16 @@ packer.startup(function(use)
 
 	use({
 		"nvim-lualine/lualine.nvim",
-		after = "catppuccin",
+		after = "gruvbox-baby",
 		config = function()
 			require("config.lualine")
+		end,
+	})
+
+	use({
+		"kyazdani42/nvim-tree.lua",
+		config = function()
+			require("config.tree")
 		end,
 	})
 
@@ -160,16 +186,9 @@ packer.startup(function(use)
 	})
 
 	use({
-		"j-hui/fidget.nvim",
+		"lewis6991/gitsigns.nvim",
 		config = function()
-			require("fidget").setup({
-				text = {
-					spinner = "dots",
-				},
-				window = {
-					blend = 0,
-				},
-			})
+			require("gitsigns").setup()
 		end,
 	})
 
