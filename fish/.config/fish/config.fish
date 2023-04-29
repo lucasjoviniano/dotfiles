@@ -38,3 +38,7 @@ set -q GHCUP_INSTALL_BASE_PREFIX[1]; or set GHCUP_INSTALL_BASE_PREFIX $HOME ; se
 
 # opam configuration
 source /home/lucasjoviniano/.opam/opam-init/init.fish > /dev/null 2> /dev/null; or true
+
+# bun
+set --export BUN_INSTALL "$HOME/.bun"
+set --export PATH $BUN_INSTALL/bin $PATH

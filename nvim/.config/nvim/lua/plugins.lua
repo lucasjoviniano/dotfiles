@@ -122,6 +122,8 @@ packer.startup(function(use)
 		},
 	})
 
+	use("glepnir/lspsaga.nvim")
+
 	use("editorconfig/editorconfig-vim")
 	use("tpope/vim-repeat")
 	use("machakann/vim-sandwich")
@@ -131,8 +133,8 @@ packer.startup(function(use)
 	-- UI
 
 	use({
-		"luisiacc/gruvbox-baby",
-		as = "gruvbox",
+		"shaunsingh/oxocarbon.nvim",
+		run = "./install.sh",
 		config = function()
 			require("config.colorscheme")
 		end,
